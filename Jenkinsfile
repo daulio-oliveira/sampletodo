@@ -9,23 +9,5 @@ pipeline {
                 }
             }
         }
-        stage ("Push Image") {
-            steps {
-                script {
-                    docker.withRegistry("https://registry.hub.docker.com",'dockerhub'){
-                        dockerapp.push("v${env.BUILD_ID}")
-                        dockerapp.push("latest")
-                    }
-                }
-            }
-        }
-        stage ("Deploy Kubernetes"){
-            steps{
-                withKubeConfig([credentialsId: 'kubeconfig']){
-                    sh "kubectl apply -f ./k8s/deployment.yaml"
-                    // sh "kubectl set image deployment/web web=matheusmprado/sampletodoaula3:latest"
-                }
-            }
-        }
     }
 }
